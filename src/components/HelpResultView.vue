@@ -5,7 +5,7 @@
       <div class="section">
         <strong>Supported Commands</strong>
         <ul>
-          <li><code><CommandLink text="23 | 34" /></code> — type bitwise expression to see result in binary</li>
+          <li><code><CommandLink text="0o2 | 34 ^ 0xF &gt; 0b10" /></code> — type bitwise expression to see result in binary</li>
           <li><code><CommandLink text="23 34" /></code> — type one or more numbers to see their binary representations</li>
         </ul>
       </div>
