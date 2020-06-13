@@ -32,7 +32,7 @@ import Vue from 'vue';
 import store from '../store';
 import {Component} from 'vue-property-decorator';
 import ResultView from '../components/ResultView.vue';
-import UnknownCommandResult, { CommandResult, ExprResult, ErrorResult } from '../models/result';
+import UnknownCommandResult, { CommandResult, ExprResult, ErrorResult, HelpResult } from '../models/result';
 import {ExpressionParser} from '../scripts/expression/parser';
 
 @Component({
@@ -49,15 +49,19 @@ export default class Main extends Vue {
   }
 
   submitInput(ev: any) {
-    try {
-      if (ExpressionParser.canParse(this.input)) {
-        var expr = ExpressionParser.parse(this.input);
-        this.history.unshift(new ExprResult(this.input, expr));
-      } else {
-        this.history.unshift(new UnknownCommandResult(this.input));
+    if (this.input.toLowerCase().trim() == "help") {
+      this.history.unshift(new HelpResult(this.input));
+    } else {
+      try {
+        if (ExpressionParser.canParse(this.input)) {
+          var expr = ExpressionParser.parse(this.input);
+          this.history.unshift(new ExprResult(this.input, expr));
+        } else {
+          this.history.unshift(new UnknownCommandResult(this.input));
+        }
+      } catch (e) {
+        this.history.unshift(new ErrorResult(this.input, e.toString()));
       }
-    } catch (e) {
-      this.history.unshift(new ErrorResult(this.input, e.toString()));
     }
     this.$forceUpdate();
     this.input = "";
@@ -96,6 +100,11 @@ export default class Main extends Vue {
     } else if (opts) {
       this.input = this.decodeHash(opts);
       this.submitInput(null)
+    }
+
+    if (this.history.length == 0) {
+      this.input = "help";
+      this.submitInput(null);
     }
 
     if (window.matchMedia) {

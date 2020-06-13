@@ -67,6 +67,7 @@ code { font-size: 1.2em; font-weight: bold; }
 .error { color: maroon; }
 
 .soft { opacity: 0.7 }
+.vs__clear { display: none; }
 
 .changelog .item { margin-top: 2em; }
 
