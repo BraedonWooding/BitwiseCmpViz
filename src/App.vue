@@ -19,7 +19,7 @@
 body { padding:0; margin:0; height: 100%; overflow: hidden; }
 html { height: 100% }
 
-.app-root { font-family: Verdana; font-size: 1.6em; margin: 0; padding: 20px 100px 0 100px; height: 100%; overflow: auto; }
+.app-root { font-family: Verdana; font-size: 1em; margin: 0; padding: 20px 100px 0 100px; height: 100%; overflow: auto; }
 code { font-size: 1.2em; font-weight: bold; }
 
 .header-cmd { color: #c5c5c5 }

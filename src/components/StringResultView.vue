@@ -1,7 +1,7 @@
 <template>
   <span>
     <span class="byte" :key="i" v-for="(byte, i) in bytes">
-      <span @click="flipBit(command.value, j)" :class="bit.cls" :key="j" v-for="(bit, j) in byte">
+      <span @click="flipBit(command.value, j)" :class="bit.cls" :key="j + 8 * i" v-for="(bit, j) in byte">
         {{bit.val}}
       </span>
     </span>
