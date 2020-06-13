@@ -1,5 +1,7 @@
 # bitwisecmp
 
+OPEN IT [HERE](https://braedonwooding.github.io/BitwiseCmpViz/)
+
 A nice app to visualise a sequence of bitwise operations.
 
 Based on [BitwiseCmd](https://github.com/BorysLevytskyi/BitwiseCmd).
