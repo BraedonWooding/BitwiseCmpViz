@@ -42,7 +42,7 @@ code { font-size: 1.2em; font-weight: bold; }
 .result:hover .hashLink { visibility: visible }
 
 .expression .label { font-weight:  bold; padding-right: 5px; text-align: right; }
-.expression .bin { letter-spacing: 3px; padding: 0px 20px; }
+.expression .bin { padding: 0px 20px; }
 .expression .flipable { cursor: pointer; opacity: 1 }
 .expression .flipable:hover { opacity: 0.8 }
 .expression .byte { margin: 0 3px; }
@@ -53,6 +53,9 @@ code { font-size: 1.2em; font-weight: bold; }
 .expression .prefix { font-weight: normal; display: none; font-size: 0.9em }
 .expression .other { font-size: 0.9em; padding: 0px 20px; }
 .expression .sign { text-align: right}
+
+.byte { border-right: 1px solid gray; }
+.byte:last-child { border-right: none; }
 
 .hex .prefix { display: inline; }
 

@@ -1,7 +1,7 @@
 <template>
   <span>
     <span class="byte" :key="i" v-for="(byte, i) in bytes">
-      <span @click="flipBit(command.value, j)" :class="bit.cls" :key="j + 8 * i" v-for="(bit, j) in byte">
+      <span @click="flipBit(command.value, j + 8 * i)" :class="bit.cls" :key="(j + 8 * i)" v-for="(bit, j) in byte">
         {{bit.val}}
       </span>
     </span>
@@ -28,7 +28,7 @@ export default class StringResultView extends Vue {
 
   get bytes() {
     const bytes = [];
-    const bits = this.bits;
+    const bits = this.bits();
     if (!store.state.emphasiseBytes) return [bits];
 
     var key = 0;
@@ -39,7 +39,7 @@ export default class StringResultView extends Vue {
     return bytes;
   }
 
-  get bits() {
+  bits() {
     const type = this.canFlipBits ? ' flipable ' : '';
     const cls: any = { '0': `zero ${type}`, '1': `one ${type}`};
     return this.command.value.split('').map((c, i) => { return {cls: cls[c], val: c}; });
