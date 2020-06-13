@@ -1,6 +1,7 @@
 <template>
   <div :class="getClasses">
     <div className="expressionInput-container">
+      <span style="padding-top: 7px; padding-right; 20px; width: 25%;" class="indicator on">Made by Braedon Wooding, with heavy influence by http://bitwisecmd.com/</span>
       <input style="width: 100%;" class="expressionInput mono" v-model="input" @keydown.enter="submitInput" placeholder="type expression like '0o2 | 34 ^ 0xF &gt; 0b10' or 'help' or '1 200 3 10" type="text" />
       <div className="configPnl">
         <span @click="em" v-bind:class="{ 'indicator': true, 'on': emOn }" title="Toggle Emphasize Bytes">[Bytes]</span>
