@@ -103,19 +103,19 @@ export default class Main extends Vue {
           .addEventListener('change', event => {
           if (event.matches) {
             //dark mode
-            store.commit('updateTheme', 'dark');
+            store.commit('updateTheme', 'midnight');
           } else {
             //light mode
             store.commit('updateTheme', 'light');
           }
       })
       if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        store.commit('updateTheme', 'dark');
+        store.commit('updateTheme', 'midnight');
       } else {
         store.commit('updateTheme', 'light');
       }
     } else {
-      store.commit('updateTheme', 'dark');
+      store.commit('updateTheme', 'midnight');
     }
   }
 

@@ -14,7 +14,7 @@ export interface State {
 
 export default new Vuex.Store({
   state: {
-    theme: 'dark',
+    theme: 'midnight',
     intSize: 16,
     forceSize: false,
     emphasiseBytes: true,
