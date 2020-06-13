@@ -42,7 +42,7 @@ export var ExpressionParser: any = {
 
 // List of numbers
 ExpressionParser.addFactory({
-  regex: /^(-?(?:\d+|0x[\d,a-f]+|0b[0-1])\s?)+$/,
+  regex: /^(-?(?:\d+|0x[\d,a-f]+|0b[0-1]|0o[0-7]+)\s?)+$/,
   canCreate: function(string: string) {
     return this.regex.test(string);
   },
@@ -63,11 +63,10 @@ ExpressionParser.addFactory({
 
 // Multiple operands expression
 ExpressionParser.addFactory({
-  fullRegex: /^((<<|>>|>>>|\||\&|\^)?(~?-?([b,x,a-f,0-9]+)))+$/,
-  regex: /(<<|>>|>>>|\||\&|\^)?(~?-?(?:[b,x,a-f,0-9]+))/g,
+  fullRegex: /^((<<|>>|>>>|\||\&|\^)?(~?-?([b,x,o,a-f,0-9]+)))+$/,
+  regex: /(<<|>>|>>>|\||\&|\^)?(~?-?(?:[b,x,o,a-f,0-9]+))/g,
   canCreate: function(string: string) {
-    this.fullRegex.lastIndex = 0;
-    return this.fullRegex.test(this.normalizeString(string));
+    return true;
   },
   create: function (string: string) {
     var m, operands = [];

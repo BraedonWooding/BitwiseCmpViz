@@ -1,7 +1,7 @@
 <template>
   <div class="result">
     <div class="error">
-      (X_X) Ooops.. Something ain't right: <strong>{{err}}</strong> is
+      (X_X) Ooops.. Something ain't right: <strong>{{err}}</strong>
     </div>
   </div>
 </template>
