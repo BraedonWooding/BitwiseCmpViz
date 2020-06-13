@@ -23,10 +23,12 @@ export class ErrorResult extends CommandResult {
 
 export class ExprResult extends CommandResult {
   expr: any;
+  label: string;
 
-  constructor(input: string, expr: any) {
+  constructor(input: string, label: string, expr: any) {
     super(input);
     this.expr = expr;
+    this.label = label;
   }
 }
 

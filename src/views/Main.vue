@@ -48,37 +48,48 @@ export default class Main extends Vue {
     return `app-root ${this.themeSimple}`;
   }
 
-  addInput(input: string) {
+  addInput(input: string, forceText?: string, forceValue?: string) {
     // Replace all the '(' ')' with actual values by shifting those points
-    var extra: string[] = [];
+    var extra: {val: string, prev: string | undefined, next: string | undefined}[] = [];
     var newInput: string = input;
     try {
-      var res = input.replace(/\([^()]*\)/, (match, capture) => {
-        match = match.trim();
-        if (match[0] == '(' && match[match.length - 1] == ')') {
-          match = match.substr(1, match.length - 2);
-        }
-        extra.unshift(match);
-        console.log(input);
-        console.log(match);
-        var tryInput = input.trim();
-        if (tryInput[0] == '(' && tryInput[tryInput.length - 1] == ')') {
-          tryInput = tryInput.substr(1, tryInput.length - 2);
-        }
-        return match != tryInput ? eval(match) : "";
-      });
-      newInput = res;
+      var res = input;
+      var prev: string | undefined = undefined;
+      do {
+        newInput = res;
+        var nextBatch: {val: string, prev: string | undefined, next: string | undefined}[] = [];
+        res = newInput.replace(/\([^()]*\)/, (match, capture) => {
+          match = match.trim();
+          if (match[0] == '(' && match[match.length - 1] == ')') {
+            match = match.substr(1, match.length - 2);
+          }
+          if (/[^\d,~,-]/.test(match)) {
+            nextBatch.unshift({val: match, prev: newInput, next: undefined});
+          } else {
+            return match;
+          }
+          var tryInput = input.trim();
+          if (tryInput[0] == '(' && tryInput[tryInput.length - 1] == ')') {
+            tryInput = tryInput.substr(1, tryInput.length - 2);
+          }
+          prev = newInput;
+          return match != tryInput ? eval(match) : "";
+        });
+        if (nextBatch.length > 0) nextBatch[0].next = res;
+        extra = nextBatch.concat(extra);
+      } while (res != newInput);
     } catch (e) {
       this.history.unshift(new ErrorResult(input, e.toString()));
     }
 
     if (newInput.trim() != "") {
       var expr = ExpressionParser.parse(newInput);
-      this.history.unshift(new ExprResult(input, expr));
+      this.history.unshift(new ExprResult((forceText || input), (forceValue || eval(input)), expr));
     }
 
-    extra.forEach(elem => {
-      this.addInput(elem);
+    extra.forEach((elem, i) => {
+      console.log(newInput);
+      this.addInput(elem.val, elem.prev, elem.next);
     });
   }
 

@@ -41,7 +41,10 @@ export default class ResultView extends Vue {
   }
 
   get text() {
-    return this.command.input;
+    var base = this.command.input;
+    var label = ((this.command as any).label);
+    if (label) base += " = " + label;
+    return base;
   }
 
   get getResultComponent() {
