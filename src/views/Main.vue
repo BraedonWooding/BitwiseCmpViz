@@ -2,7 +2,7 @@
   <div :class="getClasses">
     <div className="expressionInput-container">
       <span style="padding-top: 7px; padding-right; 20px; width: 25%;" class="indicator on">Made by Braedon Wooding, with heavy influence by http://bitwisecmd.com/</span>
-      <input style="width: 100%;" class="expressionInput mono" v-model="input" @keydown.enter="submitInput" placeholder="type expression like '0o2 | 34 ^ 0xF &gt; 0b10' or 'help' or '1 200 3 10" type="text" />
+      <input style="width: 100%;" class="expressionInput mono" v-model="input" @keydown.enter="submitInput" placeholder="type expression like '0o2 | 34 ^ 0xF &gt;&gt; 0b10' or 'help' or '1 200 3 10" type="text" />
       <div className="configPnl">
         <span @click="em" v-bind:class="{ 'indicator': true, 'on': emOn }" title="Toggle Emphasize Bytes">[Bytes]</span>
         <span @click="forceIntSizeToggle" v-bind:class="{ 'indicator': true, 'on': forceIntSize }" title="Force Int Size">[Force Int Size]</span>
@@ -48,14 +48,47 @@ export default class Main extends Vue {
     return `app-root ${this.themeSimple}`;
   }
 
+  addInput(input: string) {
+    // Replace all the '(' ')' with actual values by shifting those points
+    var extra: string[] = [];
+    var newInput: string = input;
+    try {
+      var res = input.replace(/\([^()]*\)/, (match, capture) => {
+        match = match.trim();
+        if (match[0] == '(' && match[match.length - 1] == ')') {
+          match = match.substr(1, match.length - 2);
+        }
+        extra.unshift(match);
+        console.log(input);
+        console.log(match);
+        var tryInput = input.trim();
+        if (tryInput[0] == '(' && tryInput[tryInput.length - 1] == ')') {
+          tryInput = tryInput.substr(1, tryInput.length - 2);
+        }
+        return match != tryInput ? eval(match) : "";
+      });
+      newInput = res;
+    } catch (e) {
+      this.history.unshift(new ErrorResult(input, e.toString()));
+    }
+
+    if (newInput.trim() != "") {
+      var expr = ExpressionParser.parse(newInput);
+      this.history.unshift(new ExprResult(input, expr));
+    }
+
+    extra.forEach(elem => {
+      this.addInput(elem);
+    });
+  }
+
   submitInput(ev: any) {
     if (this.input.toLowerCase().trim() == "help") {
       this.history.unshift(new HelpResult(this.input));
     } else {
       try {
         if (ExpressionParser.canParse(this.input)) {
-          var expr = ExpressionParser.parse(this.input);
-          this.history.unshift(new ExprResult(this.input, expr));
+          this.addInput(this.input);
         } else {
           this.history.unshift(new UnknownCommandResult(this.input));
         }

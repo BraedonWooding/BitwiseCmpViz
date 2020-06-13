@@ -8,7 +8,7 @@ export class CommandResult {
   }
 
   encodeHash (str: string) {
-    return encodeURI(str.trim().replace(/\s/g,','));
+    return encodeURIComponent(str.trim().replace(/\s/g,','));
   }
 }
 

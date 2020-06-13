@@ -42,7 +42,7 @@ export class RowModel {
   public addShiftExprResult(expr: ExpressionOperand, resultOp: Operand) {
     this.maxBits = Math.max(this.maxBits, resultOp.apply().getLengthInBits());
     this.items.push({
-      sign: expr.sign + expr.operand.toString(),
+      sign: "(" + expr.sign + " " + expr.operand.toString() + ")",
       type: 'expression-result',
       op: resultOp,
       canFlipBits: false
@@ -82,8 +82,8 @@ export class RowModel {
         model.addExprResult(not);
         prev = not;
       } else if (cur instanceof ExpressionOperand && cur.isShiftExpr) {
-        var shifted = cur.apply(prev!);
-        model.addShiftExprResult(cur, shifted);
+        prev = cur.apply(prev!);
+        model.addShiftExprResult(cur, prev);
       } else {
         model.addExpr(cur);
         prev = cur.apply(prev!);
