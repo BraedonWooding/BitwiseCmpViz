@@ -7,9 +7,6 @@
         <ul>
           <li><code><CommandLink text="23 | 34" /></code> — type bitwise expression to see result in binary</li>
           <li><code><CommandLink text="23 34" /></code> — type one or more numbers to see their binary representations</li>
-          <li><code><CommandLink text="clear" /></code> — clear output</li>
-          <li><code><CommandLink text="help" /></code> — display this help</li>
-          <li><code><CommandLink text="about" /></code> — about the app</li>
         </ul>
       </div>
   </div>
