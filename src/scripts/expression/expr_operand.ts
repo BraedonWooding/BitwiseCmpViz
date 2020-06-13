@@ -29,7 +29,7 @@ export default class ExpressionOperand {
       str = operand.value + this.sign + this.operand.apply().value;
     }
 
-    var resultOp = Operand.create(eval(str), this.operand.kind || "");
+    var resultOp = Operand.create(eval(str), this.operand.kind || "dec");
     return resultOp;
   };
 
