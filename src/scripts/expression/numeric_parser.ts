@@ -29,7 +29,7 @@ export class NumericParser {
       return null;
     }
   
-    var value = parseInt(rawInput.replace(option.prefix, ''), option.radix);
+    var value = parseInt(rawInput.replace(option.prefix, '').toLowerCase(), option.radix);
   
     return {
       value: value,
