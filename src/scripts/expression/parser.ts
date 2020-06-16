@@ -6,24 +6,22 @@ import ExpressionOperand from './expr_operand';
 export var ExpressionParser: any = {
   factories: [],
   canParse: function(string: string) {
-    var trimmed = string.replace(/^\s+|\s+$/, '');
     var i = this.factories.length-1;
     for(;i>=0;i--) {
-      if(this.factories[i].canCreate(trimmed) === true){
+      if(this.factories[i].canCreate(string) === true){
         return true;
       }
     }
     return false;
   },
   parse: function(string: string) {
-    var trimmed = string.replace(/^\s+|\s+$/, '');
     var i = 0, l = this.factories.length, factory;
 
     for(;i<l;i++) {
       factory = this.factories[i];
 
-      if(factory.canCreate(trimmed) == true){
-        return factory.create(trimmed);
+      if(factory.canCreate(string) == true){
+        return factory.create(string);
       }
     }
 
@@ -39,7 +37,7 @@ export var ExpressionParser: any = {
 
 // List of numbers
 ExpressionParser.addFactory({
-  regex: /^(-?[b,x,o,a-f,0-9,\.,A-F,\s]+)$/,
+  regex: /^(-?(?:[f,F,0][b,x,B,X,o,O])?[a-f,0-9,\.,A-F]+\s*)+$/,
   canCreate: function(string: string) {
     return this.regex.test(string);
   },
@@ -61,24 +59,29 @@ ExpressionParser.addFactory({
 // Multiple operands expression
 ExpressionParser.addFactory({
   fullRegex: /[\(,\),b,B,x,X,o,O,A-F,a-f,0-9,\.,\^,\&,\|,>>>,>>,<<,\+,-,~,\*,\%]+/,
-  regex: /(<<|>>|>>>|\||\&|\^|\+|-|\*|\%)?(~?-?(?:[b,x,o,a-f,0-9,\.,A-F]+))/g,
+  regex: /(<<|>>|>>>|\||\&|\^|\+|-(?!\s*)|\*|\%)?(~?-?(?:[b,x,o,a-f,0-9,\.,A-F]+))/g,
   canCreate: function(string: string) {
-    return this.fullRegex.test(string.replace(' ', ''));
+    return this.fullRegex.test(string);
   },
   create: function (string: string) {
     var m, operands = [];
     var normalizedString = this.normalizeString(string);
 
     while ((m = this.regex.exec(normalizedString)) != null) {
-     operands.push(this.parseMatch(m));
+      operands.push(this.parseMatch(m, operands.length === 0));
     }
 
     return new MultipleOperandsExpression(normalizedString, operands)
   },
-  parseMatch: function (m: string[]) {
+  parseMatch: function (m: string[], first: boolean) {
     var input = m[0],
         sign = m[1],
         num = m[2];
+    if (input.includes('-') && !first) {
+      input = input.replace('-', '');
+      num = num.replace('-', '');
+      sign = '-';
+    }
 
     var op = null;
     if (num.indexOf('~') == 0) {
@@ -87,7 +90,7 @@ ExpressionParser.addFactory({
       op = Operand.parse(num);
     }
 
-    if (sign == null) {
+    if (sign == null || first) {
       return op;
     } else {
       return new ExpressionOperand(input, op as Operand, sign);

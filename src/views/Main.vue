@@ -84,6 +84,7 @@ export default class Main extends Vue {
       console.error(e);
     }
 
+    console.log(newInput);
     var expr = ExpressionParser.parse(newInput);
     if (!(expr instanceof ListOfNumbersExpression) && newInput.trim() != "") {
       this.history.unshift(new ExprResult((forceText || input), (forceValue || eval(input)), expr)); 

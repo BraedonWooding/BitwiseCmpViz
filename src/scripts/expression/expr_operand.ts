@@ -31,7 +31,7 @@ export default class ExpressionOperand {
       str = operand.value + this.sign + this.operand.apply().value;
       isFloat = operand.isFloat || this.operand.isFloat;
     } else {
-      str = this.sign + this.operand.apply().value;
+      str = "" + this.operand.apply().value;
       isFloat = this.operand.isFloat;
     }
 
