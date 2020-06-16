@@ -59,7 +59,7 @@ ExpressionParser.addFactory({
 // Multiple operands expression
 ExpressionParser.addFactory({
   fullRegex: /[\(,\),b,B,x,X,o,O,A-F,a-f,0-9,\.,\^,\&,\|,>>>,>>,<<,\+,-,~,\*,\%]+/,
-  regex: /(<<|>>|>>>|\||\&|\^|\+|-(?!\s*)|\*|\%)?(~?-?(?:[b,x,o,a-f,0-9,\.,A-F]+))/g,
+  regex: /(<<|>>|>>>|\||\&|\^|\+|-|\*|\%)?(~?-?(?:[b,x,o,a-f,0-9,\.,A-F]+))/g,
   canCreate: function(string: string) {
     return this.fullRegex.test(string);
   },
@@ -77,7 +77,10 @@ ExpressionParser.addFactory({
     var input = m[0],
         sign = m[1],
         num = m[2];
-    if (input.includes('-') && !first) {
+    console.log(input);
+
+    if (/[<<,>>,>>>,\|,\&,\^,\+,-,\*,\%]-/.test(input) && !first) {
+    } else if (num.includes('-') && !first) {
       input = input.replace('-', '');
       num = num.replace('-', '');
       sign = '-';
