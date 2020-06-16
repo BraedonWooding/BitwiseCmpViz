@@ -23,9 +23,9 @@ export class ErrorResult extends CommandResult {
 
 export class ExprResult extends CommandResult {
   expr: any;
-  label: string;
+  label: string | null;
 
-  constructor(input: string, label: string, expr: any) {
+  constructor(input: string, label: string | null, expr: any) {
     super(input);
     this.expr = expr;
     this.label = label;

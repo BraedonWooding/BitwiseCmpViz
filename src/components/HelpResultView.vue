@@ -27,6 +27,7 @@
               <li><code>&lt;&lt;</code> — left shift</li>
               <li><code>&gt;&gt;</code> — sign propagating right shift (arithmetic for signed)</li>
               <li><code>&gt;&gt;&gt;</code> — zero-fill right shift</li>
+              <li><code>+ - * / %</code> - math operators</li>
           </ul>
       </div>
     </div>

@@ -34,6 +34,7 @@ import {Component} from 'vue-property-decorator';
 import ResultView from '../components/ResultView.vue';
 import UnknownCommandResult, { CommandResult, ExprResult, ErrorResult, HelpResult } from '../models/result';
 import {ExpressionParser} from '../scripts/expression/parser';
+import ListOfNumbersExpression from '../scripts/expression/list_expr';
 
 @Component({
   components: {
@@ -80,11 +81,14 @@ export default class Main extends Vue {
       } while (res != newInput);
     } catch (e) {
       this.history.unshift(new ErrorResult(input, e.toString()));
+      console.error(e);
     }
 
-    if (newInput.trim() != "") {
-      var expr = ExpressionParser.parse(newInput);
-      this.history.unshift(new ExprResult((forceText || input), (forceValue || eval(input)), expr));
+    var expr = ExpressionParser.parse(newInput);
+    if (!(expr instanceof ListOfNumbersExpression) && newInput.trim() != "") {
+      this.history.unshift(new ExprResult((forceText || input), (forceValue || eval(input)), expr)); 
+    } else {
+      this.history.unshift(new ExprResult(input, null, expr));
     }
 
     extra.forEach((elem, i) => {
@@ -105,6 +109,7 @@ export default class Main extends Vue {
         }
       } catch (e) {
         this.history.unshift(new ErrorResult(this.input, e.toString()));
+        console.error(e);
       }
     }
     this.$forceUpdate();

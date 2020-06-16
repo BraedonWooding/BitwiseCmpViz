@@ -7,6 +7,7 @@
         :command="getBinStr"
         :canFlipBits="canFlipBits"
         :flipBit="flipBit"
+        :isFloat="isFloat"
       >
       </StringResultView>
     </td>
@@ -53,6 +54,10 @@ export default class ExprRow extends Vue {
     console.log(bin, i);
     var newValue = parseInt(bin, 2);
     this.op.setValue(newValue);
+  }
+
+  get isFloat() {
+    return this.op.apply().isFloat;
   }
 
   padLeft(str: string, length: number, symbol?: string) {

@@ -23,13 +23,19 @@ export default class ExpressionOperand {
     }
 
     var str = '';
+    var isFloat = false;
     if(this.sign == '~'){
       str = '~' + this.operand.apply().value;
+      isFloat = this.operand.isFloat;
     } else if (operand) {
       str = operand.value + this.sign + this.operand.apply().value;
+      isFloat = operand.isFloat || this.operand.isFloat;
+    } else {
+      str = this.sign + this.operand.apply().value;
+      isFloat = this.operand.isFloat;
     }
 
-    var resultOp = Operand.create(eval(str), this.operand.kind || "dec");
+    var resultOp = Operand.create(eval(str), this.operand.kind || "dec", this.exprStr.includes('.') || isFloat);
     return resultOp;
   };
 

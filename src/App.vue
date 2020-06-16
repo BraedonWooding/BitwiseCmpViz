@@ -34,7 +34,6 @@ code { font-size: 1.2em; font-weight: bold; }
 
 .result { margin: 10px 10px 30px; }
 .result .input { margin-bottom: 10px; }
-.result .content { padding-left: 10px}
 .result .cur { margin-right: 5px; }
 
 .hashLink { text-decoration: none; margin-left: 5px; visibility: hidden }
@@ -45,7 +44,7 @@ code { font-size: 1.2em; font-weight: bold; }
 .expression .bin { padding: 0px 20px; }
 .expression .flipable { cursor: pointer; opacity: 1 }
 .expression .flipable:hover { opacity: 0.8 }
-.expression .byte { margin: 0 3px; }
+.expression .byte { margin: 0 3px; letter-spacing: 3px; }
 .expression .flipable { cursor: pointer; opacity: 1 }
 .expression .flipable:hover { opacity: 0.8 }
 .expression-result td { border-top: dotted 1px gray; }
@@ -181,8 +180,8 @@ code { font-size: 1.2em; font-weight: bold; }
 
 /* Top Links Shrink */
 @media (max-width: 800px) {
-
-    .top-links .link-text { display: none }
+  .top-links .link-text { display: none }
+    
 }
 
 .social-container{ position:fixed; bottom:10px; right:10px }
@@ -191,6 +190,18 @@ code { font-size: 1.2em; font-weight: bold; }
 @media (max-width: 700px) {
     body { padding: 10px; }
     .expressionInput { width: 500px; }
+    .app-root {
+      padding: 20px 20px 0px 10px;
+    }
+    .expression .bin {
+      padding: 0px 5px;
+    }
+    .expression .other {
+      padding: 0px 5px;
+    }
+    .expression .oct.other {
+      padding-right: 15px;
+    }
 }
 
 /* Further shrink */

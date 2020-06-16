@@ -36,7 +36,14 @@ export function numToDec(num: number): string {
   return num.toString(10);
 }
 
-export function toKindString(value: number, kind: string) {
+export function toKindString(value: number, kind: string, isFloat: boolean) {
+  if (isFloat) {
+    var view = new DataView(new ArrayBuffer(4));
+    view.setFloat32(0, value);
+    value = view.getUint32(0);
+    if (kind == 'dec') return view.getFloat32(0).toString();
+  }
+
   switch(kind) {
     case 'hex':
       return numToHex(value);
@@ -55,6 +62,7 @@ export function toKindString(value: number, kind: string) {
 export default class Operand {
   id: number;
   value: number;
+  isFloat: boolean;
   kind: string | null;
   lenInBits: number;
   isExpr: boolean;
@@ -63,16 +71,23 @@ export default class Operand {
     this.id = __id++;
     this.value = res.value;
     this.kind = res.kind;
+    this.isFloat = res.isFloat;
     this.lenInBits = this.getLengthInBits();
     this.isExpr = false;
   }
 
   getLengthInBits(): number {
-    if (store.state.forceSize || this.value < 0) {
+    var value = this.value;
+    if (this.isFloat) {
+      // we ALWAYS have 32 bit floats
+      return 32;
+    }
+  
+    if (store.state.forceSize || value < 0) {
       return store.state.intSize;
     }
 
-    return Math.floor(Math.log(this.value) / Math.log(2)) + 1;
+    return Math.floor(Math.log(value) / Math.log(2)) + 1;
   }
 
   getOtherKind(kind?: string) {
@@ -94,7 +109,7 @@ export default class Operand {
       value += (2 ** store.state.intSize);
     }
 
-    return toKindString(value, kind || this.kind || '');
+    return toKindString(value, kind || this.kind || '', this.isFloat);
   }
 
   toOtherKindString() {
@@ -125,11 +140,12 @@ export default class Operand {
     return this;
   }
 
-  static create(value: number, kind: string) {
+  static create(value: number, kind: string, isFloat: boolean) {
     return new Operand({
       value: value,
       kind: kind,
-      input: toKindString(value, kind),
+      input: toKindString(value, kind, isFloat),
+      isFloat: isFloat
     });
   }
 
