@@ -1,4 +1,5 @@
 import Operand from './operand';
+import store from '@/store';
 
 export default class ExpressionOperand {
   exprStr: string;
@@ -6,7 +7,7 @@ export default class ExpressionOperand {
   sign: string;
   isExpr: boolean;
   isShiftExpr: boolean;
-  isNotExpr: boolean;
+  isUnaryExpr: boolean;
 
   constructor(exprStr: string, operand: Operand, sign: string) {
     this.exprStr = exprStr;
@@ -14,7 +15,7 @@ export default class ExpressionOperand {
     this.sign = sign;
     this.isExpr = true;
     this.isShiftExpr = this.sign.indexOf('<') >= 0 || this.sign.indexOf('>')>= 0;
-    this.isNotExpr = this.sign == '~';
+    this.isUnaryExpr = this.sign == '-' || this.sign == '~';
   }
 
   apply(operand?: Operand) {
@@ -24,18 +25,25 @@ export default class ExpressionOperand {
 
     var str = '';
     var isFloat = false;
-    if(this.sign == '~'){
-      str = '~' + this.operand.apply().value;
+    var inner_value = (this.operand.apply().value << store.state.intSize) >>> store.state.intSize;
+    if(this.sign == '~' || this.sign == '-'){
+      str = this.sign + ' ' + inner_value;
       isFloat = this.operand.isFloat;
     } else if (operand) {
-      str = operand.value + this.sign + this.operand.apply().value;
+      var sign = this.sign;
+      // if they are forcing unsigned I don't want any weird arithmetic shifts.
+      if (this.sign === ">>" && store.state.forceUnsigned) {
+        sign = ">>>";
+      }
+    
+      str = ((operand.value << store.state.intSize) >>> store.state.intSize) + sign + ' ' + inner_value;
       isFloat = operand.isFloat || this.operand.isFloat;
     } else {
-      str = "" + this.operand.apply().value;
+      str = this.sign + ' ' + inner_value;
       isFloat = this.operand.isFloat;
     }
 
-    var resultOp = Operand.create(eval(str), this.operand.kind || "dec", this.exprStr.includes('.') || isFloat);
+    var resultOp = Operand.create((eval(str) << store.state.intSize) >>> store.state.intSize, "dec", this.exprStr.includes('.') || isFloat);
     return resultOp;
   };
 

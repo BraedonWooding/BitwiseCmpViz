@@ -76,7 +76,7 @@ export class RowModel {
       if (cur instanceof Operand) {
         model.addOperand(cur);
         prev = cur;
-      } else if (cur instanceof ExpressionOperand && cur.isNotExpr) {
+      } else if (cur instanceof ExpressionOperand && cur.isUnaryExpr) {
         model.addExpr(cur);
         var not = cur.apply();
         model.addExprResult(not);

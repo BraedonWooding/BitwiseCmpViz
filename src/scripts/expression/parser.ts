@@ -2,6 +2,7 @@ import Operand from './operand';
 import ListOfNumbersExpression from './list_expr';
 import MultipleOperandsExpression from './multiple_ops';
 import ExpressionOperand from './expr_operand';
+import store from '@/store';
 
 export var ExpressionParser: any = {
   factories: [],
@@ -75,24 +76,21 @@ ExpressionParser.addFactory({
   },
   parseMatch: function (m: string[], first: boolean) {
     var input = m[0],
-        sign = m[1],
+        sign: string | null = m[1],
         num = m[2];
 
-    if (/[<<,>>,>>>,\|,\&,\^,\+,-,\*,\%]-/.test(input) && !first) {
-    } else if (num.includes('-') && !first) {
-      input = input.replace('-', '');
-      num = num.replace('-', '');
-      sign = '-';
-    }
-
     var op = null;
-    if (num.indexOf('~') == 0) {
-      op = new ExpressionOperand(input, Operand.parse(num.substring(1)), '~');
+    if (num.indexOf('~') == 0 || num.indexOf('-') == 0) {
+      op = new ExpressionOperand(num, Operand.parse(num.substring(1)), num[0]);
+    } else if (sign == '~' || sign == '-') {
+      console.log('here');
+      op = new ExpressionOperand(sign + num, Operand.parse(num), sign);
+      sign = null;
     } else {
       op = Operand.parse(num);
     }
 
-    if (sign == null || first) {
+    if (sign == null) {
       return op;
     } else {
       return new ExpressionOperand(input, op as Operand, sign);

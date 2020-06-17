@@ -14,7 +14,7 @@ export function getBase(kind: string): number | null {
   }
 };
 
-export function toHexString (hex: string) {
+export function toHexString(hex: string) {
   return hex.indexOf('-') == 0 ? '-0x' + hex.substr(1) : '0x' + hex;
 }
 
