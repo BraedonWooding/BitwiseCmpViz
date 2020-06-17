@@ -51,8 +51,13 @@ export default class ExprRow extends Vue {
     var arr = str.split('');
     arr[i] = arr[i] == '0' ? '1' : '0';
     var bin = arr.join('');
-    console.log(bin, i);
     var newValue = parseInt(bin, 2);
+    // we then may have to trick it back into a float
+    if (this.op.isFloat) {
+      var dataView = new DataView(new ArrayBuffer(4));
+      dataView.setInt32(0, newValue);
+      newValue = dataView.getFloat32(0);
+    }
     this.op.setValue(newValue);
   }
 

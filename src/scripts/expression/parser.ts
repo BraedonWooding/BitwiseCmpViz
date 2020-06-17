@@ -77,7 +77,6 @@ ExpressionParser.addFactory({
     var input = m[0],
         sign = m[1],
         num = m[2];
-    console.log(input);
 
     if (/[<<,>>,>>>,\|,\&,\^,\+,-,\*,\%]-/.test(input) && !first) {
     } else if (num.includes('-') && !first) {
