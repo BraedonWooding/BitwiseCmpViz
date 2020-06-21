@@ -25,25 +25,63 @@ export default class ExpressionOperand {
 
     var str = '';
     var isFloat = false;
-    var inner_value = (this.operand.apply().value << store.state.intSize) >>> store.state.intSize;
+    var convertedToBin = false;
+  
+    var inner_value = this.operand.apply().value;
+    isFloat = this.operand.isFloat;
+
+    if (this.operand.isFloat && ['&', '|', '^', '~'].includes(this.sign)) {
+      var view = new DataView(new ArrayBuffer(4));
+      view.setFloat32(0, inner_value);
+      inner_value = view.getUint32(0)
+      isFloat = false;
+      convertedToBin = true;
+    }
+    if (!isFloat) {
+      inner_value = (inner_value << store.state.intSize) >>> store.state.intSize;
+    }
+
     if(this.sign == '~' || this.sign == '-'){
       str = this.sign + ' ' + inner_value;
-      isFloat = this.operand.isFloat;
     } else if (operand) {
       var sign = this.sign;
       // if they are forcing unsigned I don't want any weird arithmetic shifts.
       if (this.sign === ">>" && store.state.forceUnsigned) {
         sign = ">>>";
       }
+
+      var value = operand.value;
+      var operandIsFloat = operand.isFloat;
+      if (operand.isFloat && ['&', '|', '^', '~'].includes(sign)) {
+        var view = new DataView(new ArrayBuffer(4));
+        view.setFloat32(0, value);
+        value = view.getUint32(0)
+        operandIsFloat = false;
+        convertedToBin = true;
+      }
+      if (!operandIsFloat) {
+        value = (value << store.state.intSize) >>> store.state.intSize;
+      } else {
+        isFloat = true;
+      }
     
-      str = ((operand.value << store.state.intSize) >>> store.state.intSize) + sign + ' ' + inner_value;
-      isFloat = operand.isFloat || this.operand.isFloat;
+      str = value + sign + ' ' + inner_value;
     } else {
       str = this.sign + ' ' + inner_value;
-      isFloat = this.operand.isFloat;
     }
 
-    var resultOp = Operand.create((eval(str) << store.state.intSize) >>> store.state.intSize, "dec", this.exprStr.includes('.') || isFloat);
+    var result = eval(str);
+    if (convertedToBin) {
+      var view = new DataView(new ArrayBuffer(4));
+      view.setUint32(0, result);
+      value = view.getFloat32(0);
+      isFloat = true;
+    }
+    if (!isFloat) {
+      result = (result << store.state.intSize) >>> store.state.intSize;
+    }
+
+    var resultOp = Operand.create(result, "dec", this.exprStr.includes('.') || isFloat);
     return resultOp;
   };
 
